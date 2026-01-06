@@ -107,51 +107,6 @@
                     android:textSize="14sp"
                     android:lineSpacingExtra="4dp"/>
 
-                <!-- Search -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="56dp"
-                        android:layout_weight="1"
-                        app:cardBackgroundColor="#F8FAFC"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp"
-                        app:strokeColor="#E2E8F0"
-                        app:strokeWidth="1dp">
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/transparent"
-                            android:drawableStart="@android:drawable/ic_menu_search"
-                            android:drawablePadding="12dp"
-                            android:hint="Search for schemes..."
-                            android:paddingHorizontal="16dp"
-                            android:textColorHint="#94A3B8"
-                            android:textSize="14sp" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:layout_marginStart="12dp"
-                        app:cardBackgroundColor="#065F46"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="4dp">
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_filter"
-                            app:tint="@android:color/white" />
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

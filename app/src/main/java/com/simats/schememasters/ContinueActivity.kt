@@ -1,5 +1,6 @@
 package com.simats.schememasters
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -35,7 +36,6 @@ class ContinueActivity : AppCompatActivity() {
         }
 
         tvSwitchAccount.setOnClickListener {
-            // Go back to login to choose another account
             finish()
         }
     }
@@ -52,10 +52,19 @@ class ContinueActivity : AppCompatActivity() {
                     if (loginRes.status == "success") {
                         Toast.makeText(this@ContinueActivity, loginRes.message, Toast.LENGTH_SHORT).show()
                         
+                        // Fix: handle nullable userId
+                        val userId = loginRes.userId ?: -1
+                        
+                        // Save session for Google Login
+                        val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+                        with(sharedPref.edit()) {
+                            putInt("USER_ID", userId)
+                            putString("USER_NAME", name)
+                            putString("USER_EMAIL", email)
+                            apply()
+                        }
+
                         val intent = Intent(this@ContinueActivity, DashboardActivity::class.java)
-                        intent.putExtra("USER_NAME", name)
-                        intent.putExtra("USER_EMAIL", email)
-                        intent.putExtra("USER_ID", loginRes.userId)
                         startActivity(intent)
                         finish()
                     } else {

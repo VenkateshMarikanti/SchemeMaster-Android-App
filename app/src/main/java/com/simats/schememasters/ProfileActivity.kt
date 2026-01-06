@@ -29,12 +29,18 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        // Retrieve saved user ID from session
+        // Retrieve saved user details from session
         val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
         userId = sharedPref.getInt("USER_ID", -1)
+        val savedName = sharedPref.getString("USER_NAME", "User")
+        val savedEmail = sharedPref.getString("USER_EMAIL", "user@email.com")
 
         tvName = findViewById(R.id.tvName)
         tvEmail = findViewById(R.id.tvEmail)
+
+        // Set initial data from session immediately
+        tvName.text = "Hello, $savedName"
+        tvEmail.text = savedEmail
 
         // Header Back Button
         findViewById<ImageView>(R.id.btnBack).setOnClickListener {
@@ -46,18 +52,18 @@ class ProfileActivity : AppCompatActivity() {
             showEditProfileDialog()
         }
 
-        // Settings section now also triggers the edit profile dialog
+        // Settings section
         findViewById<LinearLayout>(R.id.btnSettings).setOnClickListener {
             showEditProfileDialog()
         }
 
         // Menu Click Listeners
         findViewById<LinearLayout>(R.id.btnMyApplications).setOnClickListener {
-            startActivity(Intent(this, StudentSchemesActivity::class.java))
+            startActivity(Intent(this, AllSchemesActivity::class.java))
         }
 
         findViewById<LinearLayout>(R.id.btnUploadedDocuments).setOnClickListener {
-            startActivity(Intent(this, MyDocumentsActivity::class.java))
+            startActivity(Intent(this, UploadDocsActivity::class.java))
         }
 
         findViewById<LinearLayout>(R.id.btnNotifications).setOnClickListener {
@@ -73,7 +79,7 @@ class ProfileActivity : AppCompatActivity() {
             logout()
         }
 
-        // Initial fetch
+        // Initial fetch for latest data from server
         if (userId != -1) {
             loadProfileData()
         } else {
@@ -88,15 +94,18 @@ class ProfileActivity : AppCompatActivity() {
                 if (response.isSuccessful && response.body()?.status == "success") {
                     val user = response.body()?.data
                     user?.let {
-                        // Dynamically display the registered name
                         tvName.text = "Hello, ${it.name}"
                         tvEmail.text = it.email
+                        
+                        // Update session with latest data
+                        val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+                        sharedPref.edit().putString("USER_NAME", it.name).putString("USER_EMAIL", it.email).apply()
                     }
                 }
             }
 
             override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
-                Toast.makeText(this@ProfileActivity, "Failed to load profile", Toast.LENGTH_SHORT).show()
+                // If offline, we keep showing the cached SharedPreferences data
             }
         })
     }
@@ -107,7 +116,6 @@ class ProfileActivity : AppCompatActivity() {
         val etPhone = dialogView.findViewById<EditText>(R.id.etEditPhone)
         val etCaste = dialogView.findViewById<EditText>(R.id.etEditCaste)
 
-        // Pre-fill current name (stripping "Hello, ")
         etName.setText(tvName.text.toString().replace("Hello, ", ""))
 
         AlertDialog.Builder(this)
@@ -131,12 +139,9 @@ class ProfileActivity : AppCompatActivity() {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
                 if (response.isSuccessful && response.body()?.status == "success") {
                     Toast.makeText(this@ProfileActivity, "Profile updated!", Toast.LENGTH_SHORT).show()
-                    
-                    // Update the saved name in session as well
                     val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
                     sharedPref.edit().putString("USER_NAME", name).apply()
-                    
-                    loadProfileData() // Refresh UI to show new name
+                    loadProfileData()
                 } else {
                     Toast.makeText(this@ProfileActivity, "Update failed", Toast.LENGTH_SHORT).show()
                 }

@@ -127,11 +127,12 @@ class LoginActivity : AppCompatActivity() {
                     if (loginResponse.status == "success" && loginResponse.user != null) {
                         Toast.makeText(this@LoginActivity, "Login Successful!", Toast.LENGTH_SHORT).show()
                         
-                        // Save user session
+                        // Save user session including email
                         val sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE)
                         with(sharedPref.edit()) {
                             putInt("USER_ID", loginResponse.user.userId)
                             putString("USER_NAME", loginResponse.user.name)
+                            putString("USER_EMAIL", loginResponse.user.email)
                             apply()
                         }
 
