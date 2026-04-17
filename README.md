@@ -54,7 +54,13 @@ Visual representation of key features:
 1. Clone the repository
 
 ```
-git clone https://github.com/VenkateshMarikanti/Scheme-Master-frontend.git
+git clone github.com/VenkateshMarikanti/SchemeMaster-Android-App
+
+## Backend
+
+Backend APIs developed using PHP and MySQL.
+
+🔗 Backend Repo: https://github.com/VenkateshMarikanti/Scheme-Master
 ```
 
 2. Open the project in Android Studio
